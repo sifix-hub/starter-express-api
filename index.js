@@ -4,6 +4,8 @@ const morgan = require('morgan')
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const app = express()
+const swaggerUi = require('swagger-ui-express');
+const swaggerFile = require('./swagger_output.json');
 const connectDB = require('./config/db')
 
 require('dotenv').config()
@@ -25,7 +27,8 @@ app.use(cors(
 app.get('/', (req, res) => {
     res.status(200).send("Hello World!");
 });
-
+app.use('/', require('./routes/user'))
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 const port = process.env.PORT
 connectDB()
 app.listen(port, () => {
