@@ -51,9 +51,8 @@ const register = async (req, res) => {
             if (error) {
                 res.status(500).json({ message: error.message });
             } else {
-                console.log(token, email, newUser.url)
                 console.log("Email sent: " + info.response);
-                res.status(201).json({ message: 'Successfully registered', token, email, url: newUser.url })
+                res.status(201).json({ message: 'Successfully registered', token, email })
             }
         })
     } catch (error) {
@@ -62,6 +61,41 @@ const register = async (req, res) => {
     }
 }
 
+const resendRegisterOtp = async (req, res) => {
+    try {
+        let otp = Math.floor(Math.random() * 89999 + 10000);
+        const otpExpires = Date.now() + 10 * 3600
+        req.user.otp = otp.toString()
+        req.user.otpExpires = otpExpires
+        await req.user.save();
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: process.env.EMAIL,
+                pass: process.env.PASSWORD,
+            },
+        });
+        const welcomeMessage = `<p>Your code is ${otp}</p>`
+        const mailContent = welcomeMessage
+        const mailOptions = {
+            from: process.env.EMAIL,
+            to: email,
+            subject: "Welcome - Please verify",
+            html: mailContent
+        };
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                res.status(500).json({ message: error.message });
+            } else {
+                console.log("Email sent: " + info.response);
+                res.status(201).json({ message: 'Otp resent', email })
+            }
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: error.message })
+    }
+}
 const verifyEmail = async (req, res) => {
     try {
         const errors = validationResult(req)
@@ -136,9 +170,44 @@ const forgotPassword = async (req, res) => {
             if (error) {
                 res.status(500).json({ message: error.message });
             } else {
-                console.log(token, email, newUser.url)
+
                 console.log("Email sent: " + info.response);
-                res.status(201).json({ message: 'Successfully registered', token, email, url: newUser.url })
+                res.status(201).json({ message: 'Successfully registered', token, email })
+            }
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: error.message })
+    }
+}
+
+const resendPasswordOtp = async (req, res) => {
+    try {
+        let otp = Math.floor(Math.random() * 89999 + 10000);
+        req.user.passwordToken = otp.toString()
+        req.user.passwordTokenExpires = Date.now() + 60 * 60
+        await req.user.save()
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: process.env.EMAIL,
+                pass: process.env.PASSWORD,
+            },
+        });
+        const welcomeMessage = `<p>Your code is ${otp}</p>`
+        const mailContent = welcomeMessage
+        const mailOptions = {
+            from: process.env.EMAIL,
+            to: email,
+            subject: "Passwor Reset - Please verify",
+            html: mailContent
+        };
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                res.status(500).json({ message: error.message });
+            } else {
+                console.log("Email sent: " + info.response);
+                res.status(201).json({ message: 'Successfully registered', token, email })
             }
         })
     } catch (error) {
