@@ -20,7 +20,7 @@ const register = async (req, res) => {
             return res.status(401).json({ message: "User Already exists!" })
         }
         const hashedPassword = bcrypt.hashSync(password, 12)
-        const otp = Math.floor(1000 + Math.random() * 9000).toString();
+        let otp = Math.floor(Math.random() * 89999 + 10000);
         const otpExpires = Date.now() + 10 * 3600
         const newUser = new User({
             email,
@@ -90,9 +90,9 @@ const login = async (req, res) => {
             const errorMessages = errors.array().map(error => error.msg)
             return res.status(422).json({ errors: errorMessages })
         }
-        const { email, password } = req.body
-        const user = await User.findOne({ 'local.email': email })
-        if (!user) return res.status(404).json({ message: "User has not registered" })
+        const { username, password } = req.body
+        const user = await User.findOne({ username: username })
+        if (!user) return res.status(404).json({ message: "User not found" })
         const isMatch = bcrypt.compare(password, user.password)
         if (!isMatch) return res.status(403).json({ message: "Incorrect Password" })
         const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' })
@@ -103,4 +103,72 @@ const login = async (req, res) => {
     }
 }
 
-module.exports = {register, login, verifyEmail}
+const forgotPassword = async (req, res) => {
+    try {
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            const errorMessages = errors.array().map(error => error.msg)
+            return res.status(422).json({ errors: errorMessages })
+        }
+        const { email } = req.body
+        let user = await User.findOne({ email: email })
+        if (!user) return res.status(404).json({ message: 'User not found' })
+        let otp = Math.floor(Math.random() * 89999 + 10000);
+        user.passwordToken = otp.toString()
+        user.passwordTokenExpires = Date.now() + 60 * 60
+        await user.save()
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: process.env.EMAIL,
+                pass: process.env.PASSWORD,
+            },
+        });
+        const welcomeMessage = `<p>Your code is ${otp}</p>`
+        const mailContent = welcomeMessage
+        const mailOptions = {
+            from: process.env.EMAIL,
+            to: email,
+            subject: "Passwor Reset - Please verify",
+            html: mailContent
+        };
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                res.status(500).json({ message: error.message });
+            } else {
+                console.log(token, email, newUser.url)
+                console.log("Email sent: " + info.response);
+                res.status(201).json({ message: 'Successfully registered', token, email, url: newUser.url })
+            }
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: error.message })
+    }
+}
+
+const resetPassword = async (req, res) => {
+    try {
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            const errorMessages = errors.array().map(error => error.msg)
+            return res.status(422).json({ errors: errorMessages })
+        }
+        const { passwordToken, password } = req.body;
+        const user = await User.findOne({ passwordToken: passwordToken, password: password })
+        if (!user) return res.status(404).json({ errors: 'User not found' })
+        const hashedPassword = bcrypt.hashSync(password, 12)
+        const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' })
+        user.passwordToken = null
+        user.passwordTokenExpires = null
+        user.password = hashedPassword
+        await user.save();
+        res.status(200).json({ message: 'Password Updated successfully', token })
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: error.message })
+    }
+}
+
+module.exports = { register, login, verifyEmail, forgotPassword, resetPassword }
