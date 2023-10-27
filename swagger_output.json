@@ -5,7 +5,7 @@
     "title": "REST API",
     "description": ""
   },
-  "host": "eager-lime-windbreaker.cyclic.app/api-docs",
+  "host": "eager-lime-windbreaker.cyclic.app",
   "basePath": "/",
   "schemes": [
     "https"
