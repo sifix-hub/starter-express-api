@@ -15,7 +15,7 @@ const UserSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
-        unique
+        unique: true,
     },
     
     firstName: {
@@ -94,6 +94,19 @@ const UserSchema = new mongoose.Schema({
     
     // Authorization for Automatic Payments
     autoPaymentAuthorization: Boolean,
+
+    isLoanProvider: {
+        type: Boolean,
+        default: false, // Initially, a user is not a loan provider
+    },
+    amountToLend: Number,
+    totalFunds: Number,
+    rate: Number,
+    statePreference: String,
+    maxDuration: Number,
+    repaymentPlan: String,
+    termsAndConditions: String,
+    requiredDocuments: String,
     
 
 },

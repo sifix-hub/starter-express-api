@@ -1,19 +1,17 @@
 
 // Import necessary models
 
-const Wallet = require('../models/wallet');
+
 const Loan = require('../models/loan');
 const Transaction = require('../models/transaction');
 const Merchant = require('../models/merchant');
 
-const User = require('../models/user')
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
+const User = require('../models/user');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
-const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 require('dotenv').config()
-
 
 
 const register = async (req, res) => {
@@ -30,11 +28,7 @@ const register = async (req, res) => {
             return res.status(401).json({ message: "User Already exists!" })
         }
         const hashedPassword = bcrypt.hashSync(password, 12)
-
         let otp = Math.floor(Math.random() * 89999 + 10000);
-
-        const otp = Math.floor(1000 + Math.random() * 9000).toString();
-
         const otpExpires = Date.now() + 10 * 3600
         const newUser = new User({
             email,
@@ -151,10 +145,6 @@ const login = async (req, res) => {
         const user = await User.findOne({ username: username })
         if (!user) return res.status(404).json({ message: "User not found" })
 
-        const { email, password } = req.body
-        const user = await User.findOne({ 'local.email': email })
-        if (!user) return res.status(404).json({ message: "User has not registered" })
-
         const isMatch = bcrypt.compare(password, user.password)
         if (!isMatch) return res.status(403).json({ message: "Incorrect Password" })
         const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' })
@@ -269,29 +259,28 @@ const resetPassword = async (req, res) => {
     }
 }
 
-module.exports = { register, login, verifyEmail, forgotPassword, resetPassword }
 
+const getUserProfile = async (req, res) => {
+    try {
+        const errors = validationResult(req);
 
-    // Implement the user-related functions (e.g., getUserProfile, uploadImage, etc.)
-    const getUserProfile = (req, res) => {
-        // Your logic to fetch and return user profile
-        const user = req.user;
-    };
+        if (!errors.isEmpty()) {
+            const errorMessages = errors.array().map((error) => error.msg);
+            return res.status(422).json({ errors: errorMessages });
+        }
 
-    const uploadImage = (req, res) => {
-        // Your logic to handle image uploads
-    };
+        const user = await User.findById(req.user._id); // Use findById to get the user by their ID
 
-    const walletToWalletTransfer = (req, res) => {
-        // Your logic to handle wallet-to-wallet transfers
-    };
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
 
+        res.status(200).json(user);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: error.message });
+    }
+};
     // Implement the other user-related functions here
 
-module.exports = {register, 
-    login, 
-    verifyEmail, 
-    getUserProfile,
-    uploadImage,
-    walletToWalletTransfer}
-
+    module.exports = { register, login, verifyEmail, forgotPassword, resetPassword, resendPasswordOtp, resendRegisterOtp, getUserProfile }
