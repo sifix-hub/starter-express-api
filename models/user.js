@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
-<<<<<<< HEAD
+
     fullName: {
         type: String,
         required: true,
@@ -16,7 +16,8 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique
-=======
+    },
+    
     firstName: {
         type: String,
         required: true
@@ -28,7 +29,7 @@ const UserSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true
->>>>>>> Chris changes to user model loan model and routes
+
     },
     password: {
         type: String,
@@ -43,8 +44,6 @@ const UserSchema = new mongoose.Schema({
     otpExpires: {
         type: Date
     },
-<<<<<<< HEAD
-=======
     requestedLoans: [
         {
             type: mongoose.Schema.Types.ObjectId,
@@ -96,7 +95,7 @@ const UserSchema = new mongoose.Schema({
     // Authorization for Automatic Payments
     autoPaymentAuthorization: Boolean,
     
->>>>>>> Chris changes to user model loan model and routes
+
 },
     { timestamps: true }
 );
