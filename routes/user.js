@@ -3,7 +3,7 @@ const { check } = require('express-validator');
 const router = express.Router();
 
 const { authorizeUser, isEmailVerified } = require('../middlewares/authorize')
-const { register, verifyEmail, login, forgotPassword, resetPassword, resendPasswordOtp, resendRegisterOtp } = require('../controllers/user')
+const { register, verifyEmail, login, forgotPassword, resetPassword, resendPasswordOtp, resendRegisterOtp } = require('../controllers/auth')
 
 router.post('/register', register)
 router.post('/login', login)

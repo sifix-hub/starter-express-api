@@ -240,4 +240,21 @@ const resetPassword = async (req, res) => {
     }
 }
 
-module.exports = { register, login, verifyEmail, forgotPassword, resetPassword, resendPasswordOtp, resendRegisterOtp }
+const uploadImage = async (req, res) => {
+    try {
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            const errorMessages = errors.array().map(error => error.msg)
+            return res.status(422).json({ errors: errorMessages })
+        }
+        const { imageLink } = req.body
+        const user = req.user
+        user.profilePicture = imageLink
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ errors: error.message })
+    }
+}
+
+
+module.exports = { register, login, verifyEmail, forgotPassword, resetPassword, resendPasswordOtp, resendRegisterOtp, uploadImage }
