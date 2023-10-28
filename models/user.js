@@ -31,7 +31,32 @@ const UserSchema = new mongoose.Schema({
     },
     profilePicture: {
         type: String
-    }
+    },
+    isMerchant: {
+        type: Boolean,
+        default: false
+    },
+    address: {
+        streetAddress1: {
+            type: String
+        },
+        city: {
+            type: String
+        },
+        state: {
+            type: String
+        },
+        country: {
+            type: String
+        }
+    },
+    longitude: {
+        type: Number
+    },
+    latitude: {
+        type: Number
+    },
+
 },
     { timestamps: true }
 );

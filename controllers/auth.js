@@ -256,4 +256,26 @@ const uploadImage = async (req, res) => {
     }
 }
 
-module.exports = { register, login, verifyEmail, forgotPassword, resetPassword, resendPasswordOtp, resendRegisterOtp, uploadImage }
+const becomeAMerchant = async (req, res) => {
+    try {
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            const errorMessages = errors.array().map(error => error.msg)
+            return res.status(422).json({ errors: errorMessages })
+        }
+        const { address, longitude, latitude, businessName, businessAddress, phoneNumber } = req.body
+        const user = req.user
+        user.isMerchant = true,
+            user.address = address,
+            user.longitude = longitude,
+            user.latitude = latitude,
+            user.businessName = businessName,
+            user.phoneNumber = phoneNumber,
+            user.businessAddress = businessAddress
+        await user.save()
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Server Error')
+    }
+}
+module.exports = { register, login, verifyEmail, forgotPassword, resetPassword, resendPasswordOtp, resendRegisterOtp, uploadImage, becomeAMerchant }
