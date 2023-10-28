@@ -10,8 +10,6 @@ router.post('/login', login)
 router.post('/verify-email', authorizeUser, verifyEmail);
 router.post('/forgot-password', forgotPassword);
 router.post('/reset-password', resetPassword);
-router.post('/resend-otp', resendRegisterOtp);
-router.post('/resend-password-otp', resendPasswordOtp);
 
 module.exports = router;
 

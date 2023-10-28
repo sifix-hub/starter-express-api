@@ -1,10 +1,13 @@
+
+
 const User = require('../models/user')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { validationResult } = require('express-validator');
-const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 require('dotenv').config()
+
+
 
 const register = async (req, res) => {
     try {
@@ -51,8 +54,14 @@ const register = async (req, res) => {
             if (error) {
                 res.status(500).json({ message: error.message });
             } else {
+
                 console.log("Email sent: " + info.response);
                 res.status(201).json({ message: 'Successfully registered', token, email })
+
+                console.log(token, email, newUser.url)
+                console.log("Email sent: " + info.response);
+                res.status(201).json({ message: 'Successfully registered', token, email, url: newUser.url })
+
             }
         })
     } catch (error) {
@@ -60,6 +69,7 @@ const register = async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 }
+
 
 const resendRegisterOtp = async (req, res) => {
     try {
@@ -96,6 +106,7 @@ const resendRegisterOtp = async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 }
+
 const verifyEmail = async (req, res) => {
     try {
         const errors = validationResult(req)
@@ -124,9 +135,11 @@ const login = async (req, res) => {
             const errorMessages = errors.array().map(error => error.msg)
             return res.status(422).json({ errors: errorMessages })
         }
+
         const { username, password } = req.body
         const user = await User.findOne({ username: username })
         if (!user) return res.status(404).json({ message: "User not found" })
+
         const isMatch = bcrypt.compare(password, user.password)
         if (!isMatch) return res.status(403).json({ message: "Incorrect Password" })
         const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' })
@@ -136,6 +149,7 @@ const login = async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 }
+
 
 const forgotPassword = async (req, res) => {
     try {
