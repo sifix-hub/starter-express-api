@@ -32,5 +32,5 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 const port = process.env.PORT
 connectDB()
 app.listen(port, () => {
-    console.log('listening on port' + port);
+    console.log('listening on port ' + port);
 });

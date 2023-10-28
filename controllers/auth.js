@@ -256,5 +256,4 @@ const uploadImage = async (req, res) => {
     }
 }
 
-
 module.exports = { register, login, verifyEmail, forgotPassword, resetPassword, resendPasswordOtp, resendRegisterOtp, uploadImage }
