@@ -1,12 +1,9 @@
-
-
 const User = require('../models/user')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { validationResult } = require('express-validator');
 const nodemailer = require('nodemailer');
 require('dotenv').config()
-
 
 
 const register = async (req, res) => {
