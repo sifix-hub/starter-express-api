@@ -6,6 +6,9 @@
     "description": ""
   },
   "host": "eager-lime-windbreaker",
+
+  "host": "eager-lime-windbreaker.cyclic.app/api-docs",
+
   "basePath": "/",
   "schemes": [
     "https"
@@ -73,7 +76,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "username": {
+                "email": {
                   "example": "any"
                 },
                 "password": {
@@ -145,6 +148,7 @@
           }
         }
       }
+
     },
     "/forgot-password": {
       "post": {
@@ -214,6 +218,7 @@
           }
         }
       }
+
     }
   }
 }

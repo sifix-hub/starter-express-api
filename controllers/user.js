@@ -1,3 +1,11 @@
+
+// Import necessary models
+
+const Wallet = require('../models/wallet');
+const Loan = require('../models/loan');
+const Transaction = require('../models/transaction');
+const Merchant = require('../models/merchant');
+
 const User = require('../models/user')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
@@ -5,6 +13,8 @@ const { validationResult } = require('express-validator');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 require('dotenv').config()
+
+
 
 const register = async (req, res) => {
     try {
@@ -20,7 +30,11 @@ const register = async (req, res) => {
             return res.status(401).json({ message: "User Already exists!" })
         }
         const hashedPassword = bcrypt.hashSync(password, 12)
+
         let otp = Math.floor(Math.random() * 89999 + 10000);
+
+        const otp = Math.floor(1000 + Math.random() * 9000).toString();
+
         const otpExpires = Date.now() + 10 * 3600
         const newUser = new User({
             email,
@@ -51,8 +65,14 @@ const register = async (req, res) => {
             if (error) {
                 res.status(500).json({ message: error.message });
             } else {
+
                 console.log("Email sent: " + info.response);
                 res.status(201).json({ message: 'Successfully registered', token, email })
+
+                console.log(token, email, newUser.url)
+                console.log("Email sent: " + info.response);
+                res.status(201).json({ message: 'Successfully registered', token, email, url: newUser.url })
+
             }
         })
     } catch (error) {
@@ -60,6 +80,7 @@ const register = async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 }
+
 
 const resendRegisterOtp = async (req, res) => {
     try {
@@ -96,6 +117,7 @@ const resendRegisterOtp = async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 }
+
 const verifyEmail = async (req, res) => {
     try {
         const errors = validationResult(req)
@@ -124,9 +146,15 @@ const login = async (req, res) => {
             const errorMessages = errors.array().map(error => error.msg)
             return res.status(422).json({ errors: errorMessages })
         }
+
         const { username, password } = req.body
         const user = await User.findOne({ username: username })
         if (!user) return res.status(404).json({ message: "User not found" })
+
+        const { email, password } = req.body
+        const user = await User.findOne({ 'local.email': email })
+        if (!user) return res.status(404).json({ message: "User has not registered" })
+
         const isMatch = bcrypt.compare(password, user.password)
         if (!isMatch) return res.status(403).json({ message: "Incorrect Password" })
         const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' })
@@ -136,6 +164,7 @@ const login = async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 }
+
 
 const forgotPassword = async (req, res) => {
     try {
@@ -241,3 +270,28 @@ const resetPassword = async (req, res) => {
 }
 
 module.exports = { register, login, verifyEmail, forgotPassword, resetPassword }
+
+
+    // Implement the user-related functions (e.g., getUserProfile, uploadImage, etc.)
+    const getUserProfile = (req, res) => {
+        // Your logic to fetch and return user profile
+        const user = req.user;
+    };
+
+    const uploadImage = (req, res) => {
+        // Your logic to handle image uploads
+    };
+
+    const walletToWalletTransfer = (req, res) => {
+        // Your logic to handle wallet-to-wallet transfers
+    };
+
+    // Implement the other user-related functions here
+
+module.exports = {register, 
+    login, 
+    verifyEmail, 
+    getUserProfile,
+    uploadImage,
+    walletToWalletTransfer}
+
