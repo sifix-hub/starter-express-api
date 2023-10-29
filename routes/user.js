@@ -4,7 +4,7 @@ const router = express.Router();
 
 const { authorizeUser, isEmailVerified } = require('../middlewares/authorize')
 const {getMerchants, getMerchant} = require('../controllers/merchant')
-const { register, verifyEmail, login, forgotPassword, resetPassword, resendPasswordOtp, resendRegisterOtp, uploadImage, becomeAMerchant, resendPasswordOtp, resendRegisterOtp } = require('../controllers/auth')
+const { register, verifyEmail, login, forgotPassword, resetPassword, resendPasswordOtp, resendRegisterOtp, uploadImage, becomeAMerchant } = require('../controllers/auth')
 
 router.post('/register', register)
 router.post('/login', login)
