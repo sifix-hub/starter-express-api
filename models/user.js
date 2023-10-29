@@ -14,7 +14,7 @@ const UserSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
     },
     password: {
         type: String,
@@ -29,34 +29,6 @@ const UserSchema = new mongoose.Schema({
     otpExpires: {
         type: Date
     },
-    profilePicture: {
-        type: String
-    },
-    isMerchant: {
-        type: Boolean,
-        default: false
-    },
-    address: {
-        streetAddress1: {
-            type: String
-        },
-        city: {
-            type: String
-        },
-        state: {
-            type: String
-        },
-        country: {
-            type: String
-        }
-    },
-    longitude: {
-        type: Number
-    },
-    latitude: {
-        type: Number
-    },
-
 },
     { timestamps: true }
 );
