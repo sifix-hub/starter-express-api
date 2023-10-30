@@ -103,7 +103,7 @@ const UserSchema = new mongoose.Schema({
     requiredDocuments: String,
     bvn: String,
     accountNo: String,
-    wallet_balance: {type: Number, default: 0},
+    balance: {type: Number, default: 0},
     longitude: { type: Number },
     latitude: { type: Number },
     businessName: { type: String },

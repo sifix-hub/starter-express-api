@@ -8,7 +8,7 @@ const { register, verifyEmail, login, forgotPassword, resetPassword, resendPassw
 
 const { indicateLendUser, getUsersWillingToGiveLoans, requestLoan, getGivenLoans, getRequestedLoans } = require('../controllers/loan');
 
-const { fundWallet, fundwalletCronJob } = require('../controllers/transaction');
+const { fundWallet, fundwalletCronJob, transferFund } = require('../controllers/transaction');
 
 router.post('/register', register);
 router.post('/login', login);
@@ -35,7 +35,7 @@ protectedRouter.get('/given-loans', getGivenLoans);
 protectedRouter.get('/requested-loans', getRequestedLoans);
 protectedRouter.post('/fund-wallet', fundWallet);
 protectedRouter.post('/webhook', fundwalletCronJob);
-
+protectedRouter.post('/transfer', transferFund);
 // Mount the protected router under a specific path
 router.use('/', protectedRouter);
 
