@@ -4,7 +4,7 @@ const router = express.Router();
 
 const { authorizeUser, isEmailVerified } = require('../middlewares/authorize');
 
-const { register, verifyEmail, login, forgotPassword, resetPassword, resendPasswordOtp, resendRegisterOtp, getUserProfile, uploadImage } = require('../controllers/user');
+const { register, verifyEmail, login, forgotPassword, resetPassword, resendPasswordOtp, resendRegisterOtp, getUserProfile, uploadImage } = require('../controllers/auth');
 
 const {indicateLendUser, getUsersWillingToGiveLoans, requestLoan, getGivenLoans, getRequestedLoans} = require('../controllers/loan');
 
