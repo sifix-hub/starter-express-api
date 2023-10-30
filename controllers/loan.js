@@ -1,4 +1,6 @@
 const User = require('../models/user'); // Import the User model
+const axios = require('axios');
+
 
 // Controller function to get users willing to give loans
 const getUsersWillingToGiveLoans = async (req, res) => {
@@ -43,17 +45,18 @@ const indicateLendUser = async (req, res) => {
 
         // Update the user's profile with lending-related details
         user.isLoanProvider = true;
-        user.amountToLend = req.body.amountToLend;
+        user.maxLoanAmount = req.body.maxLoanAmount;
         user.totalFunds = req.body.totalFunds;
-        user.rate = req.body.rate;
+        user.interestRate = req.body.interestRate;
         user.statePreference = req.body.statePreference;
-        user.maxDuration = req.body.maxDuration;
+        user.allowableLoanDuration = req.body.allowableLoanDuration;
         user.repaymentPlan = req.body.repaymentPlan;
-        user.termsAndConditions = req.body.termsAndConditions;
+        user.loanConditions = req.body.loanConditions;
         user.requiredDocuments = req.body.requiredDocuments;
 
         // Save the updated user profile
         await user.save();
+        
 
         res.status(201).json({ message: 'User profile updated successfully.', user });
     } catch (error) {
@@ -175,7 +178,6 @@ const checkBorrowerEligibility = async (borrower, lenderId, loanAmount, loanDura
 };
 
 
-const axios = require('axios');
 
 // Function to get the credit score of a customer by BVN
 async function getCreditScoreByBVN(bvn, reason, allowLocalSearch = true) {
