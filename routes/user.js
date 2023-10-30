@@ -15,6 +15,8 @@ router.post('/login', login);
 router.post('/verify-email', authorizeUser, verifyEmail);
 router.post('/forgot-password', forgotPassword);
 router.post('/reset-password', resetPassword);
+router.post('/resend-reg-otp', resendRegisterOtp);
+router.post('/resend-otp', resendPasswordOtp);
 
 
 // Nested router for protected routes with authorization

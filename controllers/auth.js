@@ -263,6 +263,13 @@ const getUserProfile = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-    // Implement the other user-related functions here
+
+const becomeAMerchant = async (req, res) => {
+    try{
+        
+    } catch (error) {
+
+    }
+}
 
     module.exports = { register, login, verifyEmail, forgotPassword, resetPassword, resendPasswordOtp, resendRegisterOtp, getUserProfile }
