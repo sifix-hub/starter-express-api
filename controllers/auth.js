@@ -20,20 +20,33 @@ const register = async (req, res) => {
             const errorMessages = errors.array().map(error => error.msg)
             return res.status(422).json({ errors: errorMessages })
         }
-        const { email, password, firstName, lastName } = req.body
-        const user = await User.findOne({ email: email })
+        const { email, password, fullName, username, phone } = req.body
+        let user = await User.findOne({ email: email });
         if (user) {
             console.log("user already exists")
             return res.status(401).json({ message: "User Already exists!" })
         }
-        const hashedPassword = bcrypt.hashSync(password, 12)
+        user = await User.findOne({ username: username });
+        if (user) {
+            console.log("username already exists")
+            return res.status(401).json({ message: "Username Already exists!" })
+        }
+        user = await User.findOne({ phone: phone });
+        if (user) {
+            console.log("Phone Number already exists")
+            return res.status(401).json({ message: "Phone Number Already exists!" })
+        }
+        const hashedPassword = bcrypt.hashSync(password, 12);
         let otp = Math.floor(Math.random() * 89999 + 10000);
-        const otpExpires = Date.now() + 10 * 3600
+        const otpExpires = Date.now() + 10 * 3600;
+        const accountNo = await generateUniqueAccountNo();
         const newUser = new User({
             email,
             password: hashedPassword,
-            firstName,
-            lastName,
+            fullName,
+            username,
+            phone,
+            accountNo,
             otp: otp.toString(),
             otpExpires
         })
@@ -137,7 +150,7 @@ const login = async (req, res) => {
         const isMatch = bcrypt.compare(password, user.password)
         if (!isMatch) return res.status(403).json({ message: "Incorrect Password" })
         const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' })
-        res.status(200).json({ message: "Login successful", token: token, email: user.email, firstName: user.firstName, lastName: user.lastName })
+        res.status(200).json({ message: "Login successful", token: token, email: user.email, fullName: user.fullName });
     } catch (error) {
         console.log(error)
         res.status(500).json({ message: error.message })
@@ -291,5 +304,17 @@ const uploadImage = async (req, res) => {
         res.status(500).send({ error: error.message });
     }
 }
+
+const generateUniqueAccountNo = async () => {
+    let accountNo;
+    do {
+      // Generate a random 9-digit number and add '8' as the first digit
+      accountNo = '8' + Math.floor(100000000 + Math.random() * 900000000);
+      // Check if the accountNo already exists in the database
+      const existingUser = await User.findOne({ accountNo });
+    } while (existingUser);
+    return accountNo;
+  };
+  
 
 module.exports = { register, login, verifyEmail, forgotPassword, resetPassword, resendPasswordOtp, resendRegisterOtp, getUserProfile, uploadImage, becomeAMerchant }

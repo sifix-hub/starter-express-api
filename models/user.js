@@ -14,12 +14,7 @@ const UserSchema = new mongoose.Schema({
         unique: true,
     },
     
-    firstName: {
-        type: String,
-        required: true,
-        min: 3
-    },
-    lastName: {
+    fullName: {
         type: String,
         required: true,
         min: 3
@@ -107,12 +102,14 @@ const UserSchema = new mongoose.Schema({
     loanConditions: String,
     requiredDocuments: String,
     bvn: String,
-    wallet_address: String,
-    wallet_balance: Number,
+    accountNo: String,
+    wallet_balance: {type: Number, default: 0},
     longitude: { type: Number },
     latitude: { type: Number },
     businessName: { type: String },
     rating: { type: Number },
+    phone: String,
+    accountType: { type: String, default: 'Tier 1' },
 
 },
     { timestamps: true }

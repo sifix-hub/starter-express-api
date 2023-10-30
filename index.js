@@ -48,5 +48,10 @@ app.use('/', require('./routes/user'))
 const port = process.env.PORT
 connectDB()
 app.listen(port, () => {
-    console.log('listening on port' + port);
+    console.log('listening on port ' + port);
 });
+
+//sign a user for testing purpose
+const jwt = require('jsonwebtoken');
+const token = jwt.sign({ email: 'Soledad.Deckow@hotmail.com' }, process.env.JWT_SECRET, { expiresIn: '1h' })
+console.log(token);
