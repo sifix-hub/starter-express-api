@@ -306,15 +306,19 @@ const uploadImage = async (req, res) => {
 }
 
 const generateUniqueAccountNo = async () => {
-    let accountNo;
+    let accountNo, existingUser;
     do {
       // Generate a random 9-digit number and add '8' as the first digit
       accountNo = '8' + Math.floor(100000000 + Math.random() * 900000000);
       // Check if the accountNo already exists in the database
-      const existingUser = await User.findOne({ accountNo });
+      existingUser = await User.findOne({ accountNo }).maxTimeMS(30000).exec(function (err, user) {
+        // Handle the result or error here
+        console.log(err);
+      });
+      
     } while (existingUser);
     return accountNo;
   };
-  
+   
 
 module.exports = { register, login, verifyEmail, forgotPassword, resetPassword, resendPasswordOtp, resendRegisterOtp, getUserProfile, uploadImage, becomeAMerchant }

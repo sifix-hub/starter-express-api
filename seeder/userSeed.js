@@ -14,7 +14,7 @@ const seedUsers = async () => {
       
       const username = faker.internet.userName();
       const email = faker.internet.email();
-      const phone = faker.internet.phone();
+      const phone = faker.phone.number();
       const firstName = faker.person.firstName();
       const lastName = faker.person.lastName();
       const fullName = firstName + ' ' + lastName;
@@ -112,16 +112,16 @@ const seedUsers = async () => {
 };
 
 const generateUniqueAccountNo = async () => {
-    let accountNo;
+    let accountNo, existingUser;
     do {
       // Generate a random 9-digit number and add '8' as the first digit
       accountNo = '8' + Math.floor(100000000 + Math.random() * 900000000);
       // Check if the accountNo already exists in the database
-      const existingUser = await User.findOne({ accountNo });
+      existingUser = await User.findOne({ accountNo });
     } while (existingUser);
     return accountNo;
   };
-  
-
+   
+ 
 
 module.exports = seedUsers;

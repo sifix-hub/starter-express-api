@@ -55,3 +55,10 @@ app.listen(port, () => {
 const jwt = require('jsonwebtoken');
 const token = jwt.sign({ email: 'Soledad.Deckow@hotmail.com' }, process.env.JWT_SECRET, { expiresIn: '1h' })
 console.log(token);
+
+const seedUsers = require('./seeder/userSeed'); 
+// Call the seedUsers function
+seedUsers().then(() => {console.log('Seeding completed.');})
+  .catch((error) => {
+    console.error('Error seeding user data:', error);
+  });
