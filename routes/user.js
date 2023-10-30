@@ -8,6 +8,8 @@ const { register, verifyEmail, login, forgotPassword, resetPassword, resendPassw
 
 const {indicateLendUser, getUsersWillingToGiveLoans, requestLoan, getGivenLoans, getRequestedLoans} = require('../controllers/loan');
 
+const {fundWallet, fundwalletCronJob} = require('../controllers/transaction');
+
 router.post('/register', register);
 router.post('/login', login);
 router.post('/verify-email', authorizeUser, verifyEmail);
@@ -15,17 +17,23 @@ router.post('/forgot-password', forgotPassword);
 router.post('/reset-password', resetPassword);
 
 
+// Nested router for protected routes with authorization
+const protectedRouter = express.Router();
 
-// Apply JWT authentication middleware to these protected routes
-router.use(authorizeUser);
+// Apply JWT authentication middleware to the protected routes
+protectedRouter.use(authorizeUser);
 
-router.get('/profile', getUserProfile);
-router.post('/lend',indicateLendUser);
-router.post('/request-loan/:lenderId', getUsersWillingToGiveLoans);
-router.post('/request-loan/:lenderId', requestLoan);
-router.get('/given-loans', getGivenLoans);
-router.get('/requested-loans', getRequestedLoans);
+protectedRouter.get('/profile', getUserProfile);
+protectedRouter.post('/lend', indicateLendUser);
+protectedRouter.get('/lenders', getUsersWillingToGiveLoans);
+protectedRouter.post('/request-loan/:lenderId', requestLoan);
+protectedRouter.get('/given-loans', getGivenLoans);
+protectedRouter.get('/requested-loans', getRequestedLoans);
+protectedRouter.post('/fund-wallet', fundWallet);
+protectedRouter.post('/webhook', fundwalletCronJob);
 
+// Mount the protected router under a specific path
+router.use('/', protectedRouter);
 
 module.exports = router;
 

@@ -25,8 +25,24 @@ app.use(cors(
     }
 ))
 app.get('/', (req, res) => {
-    res.status(200).send("Hello World!");
+    try {
+        // Code that may cause an error
+        // For example, trying to connect to an external URL
+
+        // Simulate an error (replace this with your actual error condition)
+        //throw new Error('Failed to connect to the URL');
+
+        // If the code succeeds, you can send a success response
+        res.status(200).send("Hello World!");
+    } catch (error) {
+        // Log the actual error details
+        console.error('Error:', error);
+
+        // Send an error response with a status code and error message
+        res.status(500).json({ error: 'An error occurred' });
+    }
 });
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 app.use('/', require('./routes/user'))
 const port = process.env.PORT

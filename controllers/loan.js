@@ -1,4 +1,6 @@
 const User = require('../models/user'); // Import the User model
+const axios = require('axios');
+
 
 // Controller function to get users willing to give loans
 const getUsersWillingToGiveLoans = async (req, res) => {
@@ -10,12 +12,13 @@ const getUsersWillingToGiveLoans = async (req, res) => {
         const loanProviderDetails = loanProviders.map(user => ({
             userId: user._id,
             fullName: `${user.firstName} ${user.lastName}`,
-            location: user.location,
+            location: user.statePreference,
             loanConditions: user.loanConditions,
             maxLoanAmount: user.maxLoanAmount,
             allowableLoanDuration: user.allowableLoanDuration,
             interestRate: user.interestRate,
         }));
+
 
         res.status(200).json(loanProviderDetails);
     } catch (error) {
@@ -35,24 +38,25 @@ const indicateLendUser = async (req, res) => {
         }
 
         // Find the user by their ID
-        const user = await User.findById(req.user.id);
+        const user = await User.findById(req.user._id);
         if (!user) {
             return res.status(404).json({ message: 'User not found.' });
         }
 
         // Update the user's profile with lending-related details
         user.isLoanProvider = true;
-        user.amountToLend = req.body.amountToLend;
+        user.maxLoanAmount = req.body.maxLoanAmount;
         user.totalFunds = req.body.totalFunds;
-        user.rate = req.body.rate;
+        user.interestRate = req.body.interestRate;
         user.statePreference = req.body.statePreference;
-        user.maxDuration = req.body.maxDuration;
+        user.allowableLoanDuration = req.body.allowableLoanDuration;
         user.repaymentPlan = req.body.repaymentPlan;
-        user.termsAndConditions = req.body.termsAndConditions;
+        user.loanConditions = req.body.loanConditions;
         user.requiredDocuments = req.body.requiredDocuments;
 
         // Save the updated user profile
         await user.save();
+        
 
         res.status(201).json({ message: 'User profile updated successfully.', user });
     } catch (error) {
@@ -132,6 +136,15 @@ const getRequestedLoans = async (req, res) => {
 const checkBorrowerEligibility = async (borrower, lenderId, loanAmount, loanDuration) => {
     try {
         // Check the borrower's credit score
+        
+        getCreditScoreByBVN(borrower.bvn, searchReason)
+        .then((creditScoreData) => {
+        if (creditScoreData) {
+            console.log('Credit Score Data:', creditScoreData);
+        } else {
+            console.log('Failed to retrieve credit score data.');
+        }
+        });
         if (borrower.creditScore < 600) {
             throw new Error('Borrower credit score is too low.');
         }
@@ -163,6 +176,45 @@ const checkBorrowerEligibility = async (borrower, lenderId, loanAmount, loanDura
         throw error; // Borrower does not meet the guidelines, throw an error
     }
 };
+
+
+
+// Function to get the credit score of a customer by BVN
+async function getCreditScoreByBVN(bvn, reason, allowLocalSearch = true) {
+  try {
+    // Define the API endpoint URL
+    const apiUrl = `https://devapi.fcmb.com/credit-registry-api/api/Search/Report/ByBVN`;
+
+    // Set your request headers, including the x-correlation-id
+    const headers = {
+      'x-correlation-id': 'your-correlation-id', // Replace with your actual correlation ID
+    };
+
+    // Define the request parameters
+    const params = {
+      biometricId: bvn,         // Customer's BVN
+      reason,                   // Search reason
+      allowLocalSearch,         // Default is true
+    };
+
+    // Make an HTTP GET request to the API
+    const response = await axios.get(apiUrl, { params, headers });
+
+    // Check if the response status is OK (200)
+    if (response.status === 200) {
+      // The credit score data can be accessed using response.data
+      return response.data;
+    } else {
+      // Handle other response statuses as needed
+      console.error('Request failed with status', response.status);
+      return null;
+    }
+  } catch (error) {
+    console.error('Error making the API request:', error);
+    return null;
+  }
+}
+
 
 
 
