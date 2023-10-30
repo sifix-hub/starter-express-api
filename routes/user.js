@@ -4,11 +4,11 @@ const router = express.Router();
 
 const { authorizeUser, isEmailVerified } = require('../middlewares/authorize');
 
-const { register, verifyEmail, login, forgotPassword, resetPassword, resendPasswordOtp, resendRegisterOtp, getUserProfile, uploadImage } = require('../controllers/auth');
+const { register, verifyEmail, login, forgotPassword, resetPassword, resendPasswordOtp, resendRegisterOtp, getUserProfile, uploadImage, becomeAMerchant } = require('../controllers/auth');
 
-const {indicateLendUser, getUsersWillingToGiveLoans, requestLoan, getGivenLoans, getRequestedLoans} = require('../controllers/loan');
+const { indicateLendUser, getUsersWillingToGiveLoans, requestLoan, getGivenLoans, getRequestedLoans } = require('../controllers/loan');
 
-const {fundWallet, fundwalletCronJob} = require('../controllers/transaction');
+const { fundWallet, fundwalletCronJob } = require('../controllers/transaction');
 
 router.post('/register', register);
 router.post('/login', login);
@@ -27,6 +27,8 @@ protectedRouter.use(authorizeUser);
 
 protectedRouter.get('/profile', getUserProfile);
 protectedRouter.post('/lend', indicateLendUser);
+protectedRouter.post('/upload-avatar', uploadImage);
+protectedRouter.post('/become-a-merchant', becomeAMerchant)
 protectedRouter.get('/lenders', getUsersWillingToGiveLoans);
 protectedRouter.post('/request-loan/:lenderId', requestLoan);
 protectedRouter.get('/given-loans', getGivenLoans);
