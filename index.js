@@ -61,7 +61,7 @@ const user = {
   password: '3uDc0ToixPGvtkE',
 };
 
-const token = jwt.sign({ email: 'Modesta.Hudson@gmail.com' }, process.env.JWT_SECRET, { expiresIn: '1h' })
+const token = jwt.sign({ email: 'Soledad.Deckow@hotmail.com' }, process.env.JWT_SECRET, { expiresIn: '1h' })
  
 console.log(token);
 
@@ -75,5 +75,5 @@ seedUsers()
   })
   .catch((error) => {
     console.error('Error seeding user data:', error);
-    process.exit(1); // Exit with an error code in case of an error
+    //process.exit(1); // Exit with an error code in case of an error
   });

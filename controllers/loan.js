@@ -10,12 +10,13 @@ const getUsersWillingToGiveLoans = async (req, res) => {
         const loanProviderDetails = loanProviders.map(user => ({
             userId: user._id,
             fullName: `${user.firstName} ${user.lastName}`,
-            location: user.location,
+            location: user.statePreference,
             loanConditions: user.loanConditions,
             maxLoanAmount: user.maxLoanAmount,
             allowableLoanDuration: user.allowableLoanDuration,
             interestRate: user.interestRate,
         }));
+
 
         res.status(200).json(loanProviderDetails);
     } catch (error) {
@@ -35,7 +36,7 @@ const indicateLendUser = async (req, res) => {
         }
 
         // Find the user by their ID
-        const user = await User.findById(req.user.id);
+        const user = await User.findById(req.user._id);
         if (!user) {
             return res.status(404).json({ message: 'User not found.' });
         }

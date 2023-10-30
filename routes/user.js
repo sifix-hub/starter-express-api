@@ -25,7 +25,7 @@ protectedRouter.use(authorizeUser);
 
 protectedRouter.get('/profile', getUserProfile);
 protectedRouter.post('/lend', indicateLendUser);
-protectedRouter.post('/request-loan/:lenderId', getUsersWillingToGiveLoans);
+protectedRouter.get('/lenders', getUsersWillingToGiveLoans);
 protectedRouter.post('/request-loan/:lenderId', requestLoan);
 protectedRouter.get('/given-loans', getGivenLoans);
 protectedRouter.get('/requested-loans', getRequestedLoans);

@@ -98,13 +98,13 @@ const UserSchema = new mongoose.Schema({
         type: Boolean,
         default: false, // Initially, a user is not a loan provider
     },
-    amountToLend: Number,
+    maxLoanAmount: Number,
     totalFunds: Number,
-    rate: Number,
+    interestRate: Number,
     statePreference: String,
-    maxDuration: Number,
+    allowableLoanDuration: Number,
     repaymentPlan: String,
-    termsAndConditions: String,
+    loanConditions: String,
     requiredDocuments: String,
     bvn: String,
     wallet_address: String,
@@ -117,3 +117,4 @@ const UserSchema = new mongoose.Schema({
 const User = mongoose.model('User', UserSchema);
 
 module.exports = User;
+

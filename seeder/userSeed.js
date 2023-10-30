@@ -46,16 +46,16 @@ const seedUsers = async () => {
       const autoPaymentAuthorization = faker.datatype.boolean();
       // User Settings
       const isLoanProvider = faker.datatype.boolean();
-      const amountToLend = faker.number.float({ precision: 0.1 });
+      const maxLoanAmount = faker.number.float({ precision: 0.1 });
       const totalFunds = faker.number.float({ precision: 0.1 });
-      const rate = faker.number.int({ min: 0, max: 100 });
+      const interestRate = faker.number.int({ min: 0, max: 100 });
       const bvn = faker.string.numeric(10);
       const statePreference = faker.location.state();
-      const maxDuration = faker.number.int({ min: 1, max: 365 });
+      const allowableLoanDuration = faker.number.int({ min: 1, max: 365 });
       const repaymentPlan = faker.lorem.word();
-      const termsAndConditions = faker.lorem.sentence();
+      const loanConditions = faker.lorem.sentence();
       const requiredDocuments = faker.lorem.sentence();
-
+      
       // Create a new user
       const user = new User({
         
@@ -86,13 +86,13 @@ const seedUsers = async () => {
         insuranceCoverage,
         autoPaymentAuthorization,
         isLoanProvider,
-        amountToLend,
+        maxLoanAmount,
         totalFunds,
-        rate,
+        interestRate,
         statePreference,
-        maxDuration,
+        allowableLoanDuration,
         repaymentPlan,
-        termsAndConditions,
+        loanConditions,
         requiredDocuments,
         bvn
       });
