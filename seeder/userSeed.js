@@ -51,6 +51,7 @@ const seedUsers = async () => {
       const maxLoanAmount = faker.number.float({ precision: 0.1 });
       const totalFunds = faker.number.float({ precision: 0.1 });
       const interestRate = faker.number.int({ min: 0, max: 100 });
+      const balance = faker.number.float({ min: 0, max: 10000000000 });
       const bvn = faker.string.numeric(10);
       const statePreference = faker.location.state();
       const allowableLoanDuration = faker.number.int({ min: 1, max: 365 });
@@ -97,7 +98,8 @@ const seedUsers = async () => {
         loanConditions,
         requiredDocuments,
         bvn,
-        accountNo
+        accountNo,
+        balance
       });
 
       await user.save(); // Save the user to the database

@@ -322,3 +322,4 @@ const generateUniqueAccountNo = async () => {
    
 
 module.exports = { register, login, verifyEmail, forgotPassword, resetPassword, resendPasswordOtp, resendRegisterOtp, getUserProfile, uploadImage, becomeAMerchant }
+ 
