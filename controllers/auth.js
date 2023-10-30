@@ -1,6 +1,14 @@
-const User = require('../models/user')
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
+
+// Import necessary models
+
+
+const Loan = require('../models/loan');
+const Transaction = require('../models/transaction');
+const Merchant = require('../models/merchant');
+
+const User = require('../models/user');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
 const nodemailer = require('nodemailer');
 require('dotenv').config()
@@ -239,42 +247,22 @@ const resetPassword = async (req, res) => {
     }
 }
 
-const uploadImage = async (req, res) => {
-    try {
-        const errors = validationResult(req)
-        if (!errors.isEmpty()) {
-            const errorMessages = errors.array().map(error => error.msg)
-            return res.status(422).json({ errors: errorMessages })
-        }
-        const { imageLink } = req.body
-        const user = req.user
-        user.profilePicture = imageLink
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({ errors: error.message })
-    }
-}
 
-const becomeAMerchant = async (req, res) => {
+const getUserProfile = async (req, res) => {
     try {
-        const errors = validationResult(req)
-        if (!errors.isEmpty()) {
-            const errorMessages = errors.array().map(error => error.msg)
-            return res.status(422).json({ errors: errorMessages })
+        console.log(req.user.email);
+        const user = await User.findById(req.user._id); // Use findById to get the user by their ID
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
         }
-        const { address, longitude, latitude, businessName, businessAddress, phoneNumber } = req.body
-        const user = req.user
-        user.isMerchant = true,
-            user.address = address,
-            user.longitude = longitude,
-            user.latitude = latitude,
-            user.businessName = businessName,
-            user.phoneNumber = phoneNumber,
-            user.businessAddress = businessAddress
-        await user.save()
+
+        res.status(200).json(user);
     } catch (error) {
-        console.log(error);
-        res.status(500).send('Server Error')
+        console.error(error);
+        res.status(500).json({ message: error.message });
     }
-}
-module.exports = { register, login, verifyEmail, forgotPassword, resetPassword, resendPasswordOtp, resendRegisterOtp, uploadImage, becomeAMerchant }
+};
+    // Implement the other user-related functions here
+
+    module.exports = { register, login, verifyEmail, forgotPassword, resetPassword, resendPasswordOtp, resendRegisterOtp, getUserProfile }
