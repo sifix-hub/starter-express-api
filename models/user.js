@@ -109,6 +109,10 @@ const UserSchema = new mongoose.Schema({
     bvn: String,
     wallet_address: String,
     wallet_balance: Number,
+    longitude: { type: Number },
+    latitude: { type: Number },
+    businessName: { type: String },
+    rating: { type: Number },
 
 },
     { timestamps: true }
