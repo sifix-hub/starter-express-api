@@ -263,6 +263,33 @@ const getUserProfile = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-    // Implement the other user-related functions here
 
-    module.exports = { register, login, verifyEmail, forgotPassword, resetPassword, resendPasswordOtp, resendRegisterOtp, getUserProfile }
+const becomeAMerchant = async (req, res) => {
+    try {
+        const { longitude, latitude, businessName, } = req.body;
+        let user = req.user;
+        user.latitude = latitude
+        user.longitude = longitude
+        user.businessName = businessName
+        await user.save();
+        res.status(200).send('success');
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ error: error.message });
+    }
+}
+
+const uploadImage = async (req, res) => {
+    try{
+        const {profilePicture} = req.body
+        let user = req.user;
+        user.imageUrl= profilePicture
+        await user.save()
+        res.status(201).json('Successfully uploaded')
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ error: error.message });
+    }
+}
+
+module.exports = { register, login, verifyEmail, forgotPassword, resetPassword, resendPasswordOtp, resendRegisterOtp, getUserProfile, uploadImage, becomeAMerchant }
