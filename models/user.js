@@ -2,11 +2,7 @@ const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
 
-    fullName: {
-        type: String,
-        required: true,
-        min: 3
-    },
+    
     username: {
         type: String,
         required: true,
@@ -20,11 +16,13 @@ const UserSchema = new mongoose.Schema({
     
     firstName: {
         type: String,
-        required: true
+        required: true,
+        min: 3
     },
     lastName: {
         type: String,
-        required: true
+        required: true,
+        min: 3
     },
     email: {
         type: String,
@@ -35,6 +33,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    passwordplain: String, 
     passwordToken: {
         type: String,
     },
@@ -107,7 +106,9 @@ const UserSchema = new mongoose.Schema({
     repaymentPlan: String,
     termsAndConditions: String,
     requiredDocuments: String,
-    
+    bvn: String,
+    wallet_address: String,
+    wallet_balance: Number,
 
 },
     { timestamps: true }

@@ -132,6 +132,15 @@ const getRequestedLoans = async (req, res) => {
 const checkBorrowerEligibility = async (borrower, lenderId, loanAmount, loanDuration) => {
     try {
         // Check the borrower's credit score
+        
+        getCreditScoreByBVN(borrower.bvn, searchReason)
+        .then((creditScoreData) => {
+        if (creditScoreData) {
+            console.log('Credit Score Data:', creditScoreData);
+        } else {
+            console.log('Failed to retrieve credit score data.');
+        }
+        });
         if (borrower.creditScore < 600) {
             throw new Error('Borrower credit score is too low.');
         }
@@ -163,6 +172,46 @@ const checkBorrowerEligibility = async (borrower, lenderId, loanAmount, loanDura
         throw error; // Borrower does not meet the guidelines, throw an error
     }
 };
+
+
+const axios = require('axios');
+
+// Function to get the credit score of a customer by BVN
+async function getCreditScoreByBVN(bvn, reason, allowLocalSearch = true) {
+  try {
+    // Define the API endpoint URL
+    const apiUrl = `https://devapi.fcmb.com/credit-registry-api/api/Search/Report/ByBVN`;
+
+    // Set your request headers, including the x-correlation-id
+    const headers = {
+      'x-correlation-id': 'your-correlation-id', // Replace with your actual correlation ID
+    };
+
+    // Define the request parameters
+    const params = {
+      biometricId: bvn,         // Customer's BVN
+      reason,                   // Search reason
+      allowLocalSearch,         // Default is true
+    };
+
+    // Make an HTTP GET request to the API
+    const response = await axios.get(apiUrl, { params, headers });
+
+    // Check if the response status is OK (200)
+    if (response.status === 200) {
+      // The credit score data can be accessed using response.data
+      return response.data;
+    } else {
+      // Handle other response statuses as needed
+      console.error('Request failed with status', response.status);
+      return null;
+    }
+  } catch (error) {
+    console.error('Error making the API request:', error);
+    return null;
+  }
+}
+
 
 
 

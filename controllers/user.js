@@ -262,13 +262,7 @@ const resetPassword = async (req, res) => {
 
 const getUserProfile = async (req, res) => {
     try {
-        const errors = validationResult(req);
-
-        if (!errors.isEmpty()) {
-            const errorMessages = errors.array().map((error) => error.msg);
-            return res.status(422).json({ errors: errorMessages });
-        }
-
+        console.log(req.user.email);
         const user = await User.findById(req.user._id); // Use findById to get the user by their ID
 
         if (!user) {
