@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
-
     fullName: {
         type: String,
         required: true,
@@ -16,6 +15,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
+<<<<<<< HEAD
     },
     
     firstName: {
@@ -30,6 +30,8 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
 
+=======
+>>>>>>> main
     },
     password: {
         type: String,
@@ -44,6 +46,7 @@ const UserSchema = new mongoose.Schema({
     otpExpires: {
         type: Date
     },
+<<<<<<< HEAD
     requestedLoans: [
         {
             type: mongoose.Schema.Types.ObjectId,
@@ -109,6 +112,8 @@ const UserSchema = new mongoose.Schema({
     requiredDocuments: String,
     
 
+=======
+>>>>>>> main
 },
     { timestamps: true }
 );
