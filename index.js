@@ -11,7 +11,12 @@ const connectDB = require('./config/db')
 require('dotenv').config()
 
 app.use(morgan('dev'));
-app.use(helmet());
+app.use(helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      connectSrc: ["'self'", "https://eager-lime-windbreaker"],
+    },
+  }));
 app.use(bodyParser.json());
 app.use(express.json());
 
@@ -53,6 +58,6 @@ app.listen(port, () => {
 
 //sign a user for testing purpose
 const jwt = require('jsonwebtoken');
-const token = jwt.sign({ email: 'Soledad.Deckow@hotmail.com' }, process.env.JWT_SECRET, { expiresIn: '1h' })
+const token = jwt.sign({ email: 'Ines83@gmail.com' }, process.env.JWT_SECRET, { expiresIn: '1h' })
 console.log(token);
 
