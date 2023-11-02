@@ -109,7 +109,7 @@ const getGivenLoans = async (req, res) => {
         const user = req.user; // The authenticated user
 
         // Find all loans where the user is the lender
-        const givenLoans = await Loan.find({ lender: user._id }).populate('borrower', 'user_id');
+        const givenLoans = await Loan.find({ approvedBy: user._id }).populate('requestedBy', 'user_id');
 
         res.status(200).json(givenLoans);
     } catch (error) {
@@ -125,7 +125,7 @@ const getRequestedLoans = async (req, res) => {
         const user = req.user; // The authenticated user
 
         // Find all loans where the user is the borrower
-        const requestedLoans = await Loan.find({ approvedBy: user._id }).populate('requestedBy', 'user_id');
+        const requestedLoans = await Loan.find({requestedBy approvedBy: user._id }).populate('approvedBy', 'user_id');
 
         res.status(200).json(requestedLoans);
     } catch (error) {
