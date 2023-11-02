@@ -38,6 +38,10 @@ const UserSchema = new mongoose.Schema({
     otp: {
         type: String,
     },
+    isVerified: {
+        type: Boolean,
+        default: false, // Initially, a user is not a loan provider
+    },
     otpExpires: {
         type: Date
     },
