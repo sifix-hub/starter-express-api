@@ -1,4 +1,5 @@
 const User = require('../models/user'); // Import the User model
+const Loan = require('../models/loan');
 const axios = require('axios');
 
 
