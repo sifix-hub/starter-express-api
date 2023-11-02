@@ -125,7 +125,7 @@ const getRequestedLoans = async (req, res) => {
         const user = req.user; // The authenticated user
 
         // Find all loans where the user is the borrower
-        const requestedLoans = await Loan.find({requestedBy approvedBy: user._id }).populate('approvedBy', 'user_id');
+        const requestedLoans = await Loan.find({requestedBy : user._id }).populate('approvedBy', 'user_id');
 
         res.status(200).json(requestedLoans);
     } catch (error) {
