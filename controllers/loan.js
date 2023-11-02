@@ -80,11 +80,13 @@ const requestLoan = async (req, res) => {
 
         if(eligible){
             const loanRequest = new Loan({
-                borrower: req.user._id,
-                lender: lender._Id,
+                requestedBy: req.user._id,
+                approvedBy: lender._Id,
                 amount: lender.maxLoanAmount,
-                duration: lender.allowableLoanDuration,
+                durationMonths: lender.allowableLoanDuration,
                 repaymentPlan: lender.repaymentPlan,
+                interestRate: lender.loanConditions,
+                description: lender.loanConditions,
                 status:"initiated",  //'requested', 'approved', 'rejected', 'repaid',
                 del_flg:"N"
                 // Add more fields as needed
