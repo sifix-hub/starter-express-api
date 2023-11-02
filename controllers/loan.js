@@ -72,7 +72,7 @@ const requestLoan = async (req, res) => {
         const borrower = await User.findById(req.user._id); // The user requesting the loan
         const lender = await User.findById(req.params.lenderId); // The ID of the lender
         const {maxLoanAmount, allowableLoanDuration, repaymentPlan} = await User.findById(req.params.lenderId);
-        const eligible = await checkBorrowerEligibility(borrower, lender, maxLoanAmount, duration);
+        const eligible = await checkBorrowerEligibility(borrower, lender, maxLoanAmount, allowableLoanDuration);
         // Check if the borrower meets the lender's guidelines
         // Implement your logic to validate credit score, previous lending, and more
 
