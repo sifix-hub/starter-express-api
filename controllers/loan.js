@@ -11,7 +11,7 @@ const getUsersWillingToGiveLoans = async (req, res) => {
         // Prepare the response data
         const loanProviderDetails = loanProviders.map(user => ({
             userId: user._id,
-            fullName: `${user.firstName} ${user.lastName}`,
+            fullName: `${user.fullName}`,
             location: user.statePreference,
             loanConditions: user.loanConditions,
             maxLoanAmount: user.maxLoanAmount,
