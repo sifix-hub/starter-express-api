@@ -69,10 +69,10 @@ const indicateLendUser = async (req, res) => {
 
 const requestLoan = async (req, res) => {
     try {
-        const borrower = req.user; // The user requesting the loan
-        const lenderId = req.params.lenderId; // The ID of the lender
-        const {amount, duration, repaymentPlan} = req.body
-        const eligible = await checkBorrowerEligibility(borrower, lenderId, amount, duration);
+        const borrower = await User.findById(req.user._id); // The user requesting the loan
+        const lender = await User.findById(req.params.lenderId); // The ID of the lender
+        const {maxLoanAmount, allowableLoanDuration, repaymentPlan} = await User.findById(req.params.lenderId);
+        const eligible = await checkBorrowerEligibility(borrower, lender, amount, duration);
         // Check if the borrower meets the lender's guidelines
         // Implement your logic to validate credit score, previous lending, and more
 
@@ -80,12 +80,12 @@ const requestLoan = async (req, res) => {
 
         if(eligible){
             const loanRequest = new Loan({
-                borrower: borrower._id,
-                lender: lenderId,
-                amount: amount,
-                duration: duration,
-                repaymentPlan: repaymentPlan,
-                //status:"initiated",  'requested', 'approved', 'rejected', 'repaid',
+                borrower: req.user._id,
+                lender: lender._Id,
+                amount: lender.maxLoanAmount,
+                duration: lender.allowableLoanDuration,
+                repaymentPlan: lender.repaymentPlan,
+                status:"initiated",  //'requested', 'approved', 'rejected', 'repaid',
                 del_flg:"N"
                 // Add more fields as needed
             });
@@ -134,7 +134,7 @@ const getRequestedLoans = async (req, res) => {
 
 
 
-const checkBorrowerEligibility = async (borrower, lenderId, loanAmount, loanDuration) => {
+const checkBorrowerEligibility = async (borrower, lender, loanAmount, loanDuration) => {
     try {
         // Check the borrower's credit score
         /**
@@ -152,10 +152,11 @@ const checkBorrowerEligibility = async (borrower, lenderId, loanAmount, loanDura
         }
 
         // Check if the borrower has a history of previous lending
+        /**
         if (borrower.approvedLoans.some((loan) => loan.lender.equals(lenderId))) {
             throw new Error('Borrower has a history of lending from this lender.');
         }
-
+**/
         // Check if the loan amount is within the lender's range
         const lender = await User.findById(lenderId);
         if (!lender) {
