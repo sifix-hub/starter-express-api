@@ -33,7 +33,7 @@ const indicateLendUser = async (req, res) => {
     try {
         constuser  = req.user; // Assume you have a way to identify the user
 
-        if (!user) {
+        if (!constuser) {
             return res.status(400).json({ message: 'User ID is required.' });
         }
 
