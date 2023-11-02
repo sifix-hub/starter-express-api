@@ -20,7 +20,7 @@ const register = async (req, res) => {
             const errorMessages = errors.array().map(error => error.msg)
             return res.status(422).json({ errors: errorMessages })
         }
-        const { email, password, fullName, username, phone } = req.body
+        const { email, password, fullName, username, phoneNo } = req.body
         let user = await User.findOne({ email: email });
         if (user) {
             console.log("user already exists")
@@ -31,7 +31,7 @@ const register = async (req, res) => {
             console.log("username already exists")
             return res.status(401).json({ message: "Username Already exists!" })
         }
-        user = await User.findOne({ phone: phone });
+        user = await User.findOne({ phone: phoneNo });
         if (user) {
             console.log("Phone Number already exists")
             return res.status(401).json({ message: "Phone Number Already exists!" })
@@ -45,7 +45,7 @@ const register = async (req, res) => {
             password: hashedPassword,
             fullName,
             username,
-            phone,
+            phone:phoneNo,
             accountNo,
             otp: otp.toString(),
             otpExpires
