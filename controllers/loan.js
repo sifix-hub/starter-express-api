@@ -136,7 +136,7 @@ const getRequestedLoans = async (req, res) => {
 const checkBorrowerEligibility = async (borrower, lenderId, loanAmount, loanDuration) => {
     try {
         // Check the borrower's credit score
-        
+        /**
         getCreditScoreByBVN(borrower.bvn, searchReason)
         .then((creditScoreData) => {
         if (creditScoreData) {
@@ -145,7 +145,8 @@ const checkBorrowerEligibility = async (borrower, lenderId, loanAmount, loanDura
             console.log('Failed to retrieve credit score data.');
         }
         });
-        if (borrower.creditScore < 600) {
+        **/
+        if (borrower.creditScore < 50) {
             throw new Error('Borrower credit score is too low.');
         }
 
