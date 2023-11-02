@@ -160,7 +160,7 @@ const checkBorrowerEligibility = async (borrower, lender, loanAmount, loanDurati
         }
 **/
         // Check if the loan amount is within the lender's range
-        const lender = await User.findById(lenderId);
+        //const lender = await User.findById(lenderId);
         if (!lender) {
             throw new Error('Lender not found.');
         }
