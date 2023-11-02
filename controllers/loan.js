@@ -85,7 +85,7 @@ const requestLoan = async (req, res) => {
                 amount: lender.maxLoanAmount,
                 durationMonths: lender.allowableLoanDuration,
                 repaymentPlan: lender.repaymentPlan,
-                interestRate: lender.loanConditions,
+                interestRate: lender.interestRate,
                 description: lender.loanConditions,
                 status:"initiated",  //'requested', 'approved', 'rejected', 'repaid',
                 del_flg:"N"
