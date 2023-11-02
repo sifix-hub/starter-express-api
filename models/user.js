@@ -110,7 +110,7 @@ const UserSchema = new mongoose.Schema({
     requiredDocuments: String,
     bvn: String,
     accountNo: String,
-    balance: {type: Number, default: 0},
+    balance: {type: Number, default: 50000},
     longitude: { type: Number },
     latitude: { type: Number },
     businessName: { type: String },
